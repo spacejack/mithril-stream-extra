@@ -20,9 +20,6 @@ declare module 'mithril/stream' {
 	}
 
 	// We can (almost) make this type using conditions...
-	// interface WriteOnlyStream {
-	// 	end: Stream<boolean>
-	// }
 	// type ReadOnlyStream<T> = {
 	// 	[P in Exclude<keyof Stream<T>, 'end'>]: Stream<T>[P]
 	// } & (() => T)
