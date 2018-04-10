@@ -1,18 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var stream = require("mithril/stream");
+/**
+ * Creates a ReadOnlyStream from the source stream. The source can be writeable or readonly.
+ */
 function readOnly(s) {
     var s2 = stream();
     s.map(s2);
     return s2;
 }
 exports.readOnly = readOnly;
-function lift(combiner) {
+function lift(fn) {
     var streams = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         streams[_i - 1] = arguments[_i];
     }
-    return stream.merge(streams).map(function (s) { return combiner.apply(undefined, s); });
+    return stream.merge(streams).map(function (s) { return fn.apply(undefined, s); });
 }
 exports.lift = lift;
 /**

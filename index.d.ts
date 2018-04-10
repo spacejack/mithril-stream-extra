@@ -25,6 +25,9 @@ declare module 'mithril/stream' {
     }
 }
 import { ReadOnlyStream } from 'mithril/stream';
+/**
+ * Creates a ReadOnlyStream from the source stream. The source can be writeable or readonly.
+ */
 export declare function readOnly<T>(s: ReadOnlyStream<T>): ReadOnlyStream<T>;
 /**
  * Combines the values of one or more streams into a single stream that is updated whenever one or more of the sources are updated
@@ -38,7 +41,6 @@ export declare function lift<A, B, C, Z>(fn: (a: A, b: B, c: C) => Z, sa: ReadOn
 export declare function lift<A, B, C, D, Z>(fn: (a: A, b: B, c: C, d: D) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>): Stream<Z>;
 export declare function lift<A, B, C, D, E, Z>(fn: (a: A, b: B, c: C, d: D, e: E) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>): Stream<Z>;
 export declare function lift<A, B, C, D, E, F, Z>(fn: (a: A, b: B, c: C, d: D, e: E, f: F) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>, sf: ReadOnlyStream<F>): Stream<Z>;
-export declare function lift(fn: (...values: any[]) => any, ...streams: ReadOnlyStream<any>[]): Stream<any>;
 /**
  * Creates a dependent stream that only updates when the source stream value differs from the previous
  * @param s The source stream

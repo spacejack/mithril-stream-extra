@@ -30,6 +30,9 @@ declare module 'mithril/stream' {
 
 import {ReadOnlyStream} from 'mithril/stream'
 
+/**
+ * Creates a ReadOnlyStream from the source stream. The source can be writeable or readonly.
+ */
 export function readOnly<T>(s: ReadOnlyStream<T>): ReadOnlyStream<T> {
 	const s2 = stream<T>()
 	s.map(s2)
