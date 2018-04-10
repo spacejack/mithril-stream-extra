@@ -10,7 +10,7 @@ declare module 'mithril/stream' {
         /** This method is functionally identical to stream. It exists to conform to Fantasy Land's Applicative specification. */
         of(val?: T): Stream<T>;
         /** Apply. */
-        ap<U>(f: Stream<(value: T) => U>): Stream<U>;
+        ap<U>(f: ReadOnlyStream<(value: T) => U>): Stream<U>;
         /** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
         toJSON(): string;
         /** Returns the value of the stream. */
