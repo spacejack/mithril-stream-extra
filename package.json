@@ -1,0 +1,24 @@
+{
+  "name": "mithril-stream-extra",
+  "version": "1.0.0",
+  "description": "Mithril Stream Extras",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -P src",
+    "build-umd": "tsc -P src && browserify src/index.ts -s mithril-stream-extra -p [ tsify --project src/tsconfig.json ] -x=mithril/stream -o ./index.js",
+    "clean": "rm -f *.js *.d.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mithril": "^1.1.12",
+    "browserify": "^16.1.1",
+    "mithril": "^1.1.6",
+    "tsify": "^3.0.4",
+    "tslint": "^5.9.1",
+    "tslint-microsoft-contrib": "^5.0.3",
+    "typescript": "^2.8.1"
+  }
+}
