@@ -15,7 +15,7 @@ function lift(fn) {
     for (var _i = 1; _i < arguments.length; _i++) {
         streams[_i - 1] = arguments[_i];
     }
-    return stream.merge(streams).map(function (s) { return fn.apply(undefined, s); });
+    return stream.merge(streams).map(function (values) { return fn.apply(undefined, values); });
 }
 exports.lift = lift;
 /**

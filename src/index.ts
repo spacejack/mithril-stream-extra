@@ -57,7 +57,7 @@ export function lift<A,B,C,D,Z>(fn: (a: A, b: B, c: C, d: D) => Z, sa: ReadOnlyS
 export function lift<A,B,C,D,E,Z>(fn: (a: A, b: B, c: C, d: D, e: E) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>): Stream<Z>
 export function lift<A,B,C,D,E,F,Z>(fn: (a: A, b: B, c: C, d: D, e: E, f: F) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>, sf: ReadOnlyStream<F>): Stream<Z>
 export function lift<T>(fn: (...values: any[]) => T, ...streams: ReadOnlyStream<any>[]): Stream<T>  {
-	return stream.merge(streams).map(s => fn.apply(undefined, s))
+	return stream.merge(streams).map(values => fn.apply(undefined, values))
 }
 
 /**
