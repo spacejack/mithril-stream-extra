@@ -1,5 +1,6 @@
 import * as stream from 'mithril/stream'
 import {Stream} from 'mithril/stream'
+export {Stream} from 'mithril/stream'
 
 declare module 'mithril/stream' {
 	interface ReadOnlyStream<T> {
@@ -57,7 +58,7 @@ export function lift<A,B,C,D,Z>(fn: (a: A, b: B, c: C, d: D) => Z, sa: ReadOnlyS
 export function lift<A,B,C,D,E,Z>(fn: (a: A, b: B, c: C, d: D, e: E) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>): Stream<Z>
 export function lift<A,B,C,D,E,F,Z>(fn: (a: A, b: B, c: C, d: D, e: E, f: F) => Z, sa: ReadOnlyStream<A>, sb: ReadOnlyStream<B>, sc: ReadOnlyStream<C>, sd: ReadOnlyStream<D>, se: ReadOnlyStream<E>, sf: ReadOnlyStream<F>): Stream<Z>
 export function lift<T>(fn: (...values: any[]) => T, ...streams: ReadOnlyStream<any>[]): Stream<T>  {
-	return stream.merge(streams).map(values => fn.apply(undefined, values))
+	return stream.merge(streams).map<T>(values => fn.apply(undefined, values))
 }
 
 /**
@@ -75,4 +76,15 @@ export function dropRepeats<T>(s: ReadOnlyStream<T>): Stream<T> {
 		}
 	})
 	return d
+}
+
+/**
+ * Creates a dependent stream that will not emit any existing value for the stream.
+ * This will only fire on future updates.
+ */
+export function dropInitial<T>(s: Stream<T>) {
+	let isset = false
+	const e = stream<T>()
+	s.map(x => (isset ? e(x) : isset = true, x))
+	return isset ? e : s.map(x => x)
 }

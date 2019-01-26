@@ -1,8 +1,11 @@
 {
-  "extends": ["tslint-microsoft-contrib"],
+  "extends": ["tslint:recommended"],
   "defaultSeverity": "warn",
   "rules": {
     "align": [false],
+    "array-type": false,
+    "arrow-parens": false,
+    "ban-comma-operator": false,
     "curly": false,
     "export-name": false,
     "function-name": false,

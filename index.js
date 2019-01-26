@@ -35,3 +35,14 @@ function dropRepeats(s) {
     return d;
 }
 exports.dropRepeats = dropRepeats;
+/**
+ * Creates a dependent stream that will not emit any existing value for the stream.
+ * This will only fire on future updates.
+ */
+function dropInitial(s) {
+    var isset = false;
+    var e = stream();
+    s.map(function (x) { return (isset ? e(x) : isset = true, x); });
+    return isset ? e : s.map(function (x) { return x; });
+}
+exports.dropInitial = dropInitial;

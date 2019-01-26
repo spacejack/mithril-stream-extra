@@ -1,4 +1,6 @@
+import * as stream from 'mithril/stream';
 import { Stream } from 'mithril/stream';
+export { Stream } from 'mithril/stream';
 declare module 'mithril/stream' {
     interface ReadOnlyStream<T> {
         /** Returns the value of the stream. */
@@ -47,3 +49,8 @@ export declare function lift<A, B, C, D, E, F, Z>(fn: (a: A, b: B, c: C, d: D, e
  * @returns The resulting dependent stream
  */
 export declare function dropRepeats<T>(s: ReadOnlyStream<T>): Stream<T>;
+/**
+ * Creates a dependent stream that will not emit any existing value for the stream.
+ * This will only fire on future updates.
+ */
+export declare function dropInitial<T>(s: Stream<T>): stream.Stream<T>;

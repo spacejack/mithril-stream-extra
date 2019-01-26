@@ -7,5 +7,6 @@ Additional functions include:
 * `readOnly` for creating a dependent stream that cannot be written to
 * `lift` is a more user-friendly `combine` that unwraps the stream values
 * `dropRepeats` drops emits for values that are the same as the previous
+* `dropInitial` omits initial values from the parent stream
 
 See the `index.d.ts` for details.
