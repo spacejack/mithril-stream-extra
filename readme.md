@@ -1,6 +1,6 @@
 # Mithril Stream Extras
 
-This library includes a few supplemental stream functions as well as a `ReadOnlyStream` type which can be used to declare steam types that can only be read and not written to.
+This library includes a few supplemental stream functions as well as a `ReadonlyStream` type which can be used to declare steam types that can only be read and not written to.
 
 Additional functions include:
 
