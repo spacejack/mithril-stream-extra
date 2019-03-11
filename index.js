@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var stream = require("mithril/stream");
 /**
- * Creates a ReadOnlyStream from the source stream. The source can be writeable or readonly.
+ * Creates a ReadonlyStream from the source stream. The source can be writeable or readonly.
  */
 function readOnly(s) {
     var s2 = stream();
