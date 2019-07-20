@@ -8,5 +8,7 @@ Additional functions include:
 * `lift` is a more user-friendly `combine` that unwraps the stream values
 * `dropRepeats` drops emits for values that are the same as the previous
 * `dropInitial` omits initial values from the parent stream
+* `one` returns a Promise that resolves on stream's initial value
+* `nextOne` returns a Promise that resolves on stream's next value
 
 See the `index.d.ts` for details.

@@ -1,4 +1,3 @@
-import * as stream from 'mithril/stream';
 import { Stream } from 'mithril/stream';
 export { Stream } from 'mithril/stream';
 declare module 'mithril/stream' {
@@ -6,13 +5,11 @@ declare module 'mithril/stream' {
         /** Returns the value of the stream. */
         (): T;
         /** Creates a dependent stream whose value is set to the result of the callback function. */
-        map(f: (current: T) => Stream<T> | T | void): Stream<T>;
-        /** Creates a dependent stream whose value is set to the result of the callback function. */
-        map<U>(f: (current: T) => Stream<U> | U): Stream<U>;
+        map<U>(f: (value: T) => U): Stream<U>;
         /** This method is functionally identical to stream. It exists to conform to Fantasy Land's Applicative specification. */
-        of(val?: T): Stream<T>;
+        of(value?: T): Stream<T>;
         /** Apply. */
-        ap<U>(f: ReadonlyStream<(value: T) => U>): Stream<U>;
+        ap<U>(s: ReadonlyStream<(value: T) => U>): Stream<U>;
         /** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
         toJSON(): string;
         /** Returns the value of the stream. */
@@ -26,9 +23,11 @@ declare module 'mithril/stream' {
         scanMerge<U>(pairs: [ReadonlyStream<any>, (acc: U, value: any) => U][], acc: U): Stream<U>;
     }
 }
-import { ReadonlyStream as ReadonlyStream } from 'mithril/stream';
+import { ReadonlyStream } from 'mithril/stream';
 /**
- * Creates a ReadonlyStream from the source stream. The source can be writeable or readonly.
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * NOTE: Compile-time safety only. No run-time error will be thrown.
  */
 export declare function readOnly<T>(s: ReadonlyStream<T>): ReadonlyStream<T>;
 /**
@@ -53,4 +52,12 @@ export declare function dropRepeats<T>(s: ReadonlyStream<T>): Stream<T>;
  * Creates a dependent stream that will not emit any existing value for the stream.
  * This will only fire on future updates.
  */
-export declare function dropInitial<T>(s: ReadonlyStream<T>): stream.Stream<T>;
+export declare function dropInitial<T>(s: ReadonlyStream<T>): Stream<T>;
+/**
+ * Promise that resolves on stream's initial value
+ */
+export declare function one<T>(s: ReadonlyStream<T>): Promise<T>;
+/**
+ * Promise that resolves on stream's next value
+ */
+export declare function nextOne<T>(s: ReadonlyStream<T>): Promise<T>;

@@ -7,13 +7,11 @@ declare module 'mithril/stream' {
 		/** Returns the value of the stream. */
 		(): T
 		/** Creates a dependent stream whose value is set to the result of the callback function. */
-		map(f: (current: T) => Stream<T> | T | void): Stream<T>
-		/** Creates a dependent stream whose value is set to the result of the callback function. */
-		map<U>(f: (current: T) => Stream<U> | U): Stream<U>
+		map<U>(f: (value: T) => U): Stream<U>
 		/** This method is functionally identical to stream. It exists to conform to Fantasy Land's Applicative specification. */
-		of(val?: T): Stream<T>
+		of(value?: T): Stream<T>
 		/** Apply. */
-		ap<U>(f: ReadonlyStream<(value: T) => U>): Stream<U>
+		ap<U>(s: ReadonlyStream<(value: T) => U>): Stream<U>
 		/** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
 		toJSON(): string
 		/** Returns the value of the stream. */
@@ -34,15 +32,16 @@ declare module 'mithril/stream' {
 	}
 }
 
-import {ReadonlyStream as ReadonlyStream} from 'mithril/stream'
+import {ReadonlyStream} from 'mithril/stream'
 
 /**
- * Creates a ReadonlyStream from the source stream. The source can be writeable or readonly.
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * NOTE: Compile-time safety only. No run-time error will be thrown.
  */
 export function readOnly<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
-	const s2 = stream<T>()
-	s.map(s2)
-	return s2
+	// TODO: How to add run-time check?
+	return s.map(x => x)
 }
 
 /**
@@ -82,9 +81,40 @@ export function dropRepeats<T>(s: ReadonlyStream<T>): Stream<T> {
  * Creates a dependent stream that will not emit any existing value for the stream.
  * This will only fire on future updates.
  */
-export function dropInitial<T>(s: ReadonlyStream<T>) {
+export function dropInitial<T>(s: ReadonlyStream<T>): Stream<T> {
 	let isset = false
 	const e = stream<T>()
 	s.map(x => (isset ? e(x) : isset = true, x))
 	return isset ? e : s.map(x => x)
+}
+
+/**
+ * Promise that resolves on stream's initial value
+ */
+export function one<T>(s: ReadonlyStream<T>): Promise<T> {
+	return new Promise<T>(resolve => {
+		let done = false
+		let s1: Stream<void>
+		s1 = s.map(v => {
+			if (done) {
+				return
+			}
+			done = true
+			if (s1 != null) {
+				s1.end(true)
+			}
+			resolve(v)
+		})
+		if (done) {
+			s1.end(true)
+		}
+	})
+}
+
+/**
+ * Promise that resolves on stream's next value
+ */
+export function nextOne<T>(s: ReadonlyStream<T>): Promise<T> {
+	const ds = dropInitial(s)
+	return one(ds)
 }

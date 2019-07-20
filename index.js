@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var stream = require("mithril/stream");
 /**
- * Creates a ReadonlyStream from the source stream. The source can be writeable or readonly.
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * NOTE: Compile-time safety only. No run-time error will be thrown.
  */
 function readOnly(s) {
-    var s2 = stream();
-    s.map(s2);
-    return s2;
+    // TODO: How to add run-time check?
+    return s.map(function (x) { return x; });
 }
 exports.readOnly = readOnly;
 function lift(fn) {
@@ -46,3 +47,34 @@ function dropInitial(s) {
     return isset ? e : s.map(function (x) { return x; });
 }
 exports.dropInitial = dropInitial;
+/**
+ * Promise that resolves on stream's initial value
+ */
+function one(s) {
+    return new Promise(function (resolve) {
+        var done = false;
+        var s1;
+        s1 = s.map(function (v) {
+            if (done) {
+                return;
+            }
+            done = true;
+            if (s1 != null) {
+                s1.end(true);
+            }
+            resolve(v);
+        });
+        if (done) {
+            s1.end(true);
+        }
+    });
+}
+exports.one = one;
+/**
+ * Promise that resolves on stream's next value
+ */
+function nextOne(s) {
+    var ds = dropInitial(s);
+    return one(ds);
+}
+exports.nextOne = nextOne;
