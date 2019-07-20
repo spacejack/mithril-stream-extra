@@ -12,6 +12,8 @@ declare module 'mithril/stream' {
 		of(value?: T): Stream<T>
 		/** Apply. */
 		ap<U>(s: ReadonlyStream<(value: T) => U>): Stream<U>
+		/** A co-dependent stream that unregisters dependent streams when set to true. */
+		end: ReadonlyStream<boolean>
 		/** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
 		toJSON(): string
 		/** Returns the value of the stream. */
@@ -37,11 +39,31 @@ import {ReadonlyStream} from 'mithril/stream'
 /**
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
- * NOTE: Compile-time safety only. No run-time error will be thrown.
+ * NOTE: No run-time checks are performed
  */
 export function readOnly<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
-	// TODO: How to add run-time check?
 	return s.map(x => x)
+}
+
+/**
+ * (Experimental!)
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * The returned stream performs run-time write checks.
+ * TODO: make `end` available.
+ */
+export function readOnlyRT<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
+	const rs = s.map(x => x)
+	// Provide run-time write checks
+	function f() {
+		if (arguments.length > 0) {
+			throw new Error('Cannot write to a ReadonlyStream')
+		}
+		return rs()
+	}
+	// rs.end is not copied by the assign..
+	// would need to handle it specially.
+	return Object.assign(f, rs)
 }
 
 /**

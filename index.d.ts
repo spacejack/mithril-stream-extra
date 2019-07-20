@@ -10,6 +10,8 @@ declare module 'mithril/stream' {
         of(value?: T): Stream<T>;
         /** Apply. */
         ap<U>(s: ReadonlyStream<(value: T) => U>): Stream<U>;
+        /** A co-dependent stream that unregisters dependent streams when set to true. */
+        end: ReadonlyStream<boolean>;
         /** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
         toJSON(): string;
         /** Returns the value of the stream. */
@@ -27,9 +29,17 @@ import { ReadonlyStream } from 'mithril/stream';
 /**
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
- * NOTE: Compile-time safety only. No run-time error will be thrown.
+ * NOTE: No run-time checks are performed
  */
 export declare function readOnly<T>(s: ReadonlyStream<T>): ReadonlyStream<T>;
+/**
+ * (Experimental!)
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * The returned stream performs run-time write checks.
+ * TODO: make `end` available.
+ */
+export declare function readOnlyRT<T>(s: ReadonlyStream<T>): ReadonlyStream<T>;
 /**
  * Combines the values of one or more streams into a single stream that is updated whenever one or more of the sources are updated
  * @param combiner A combiner function that receives the values of the source streams and returns the value of the dependent stream

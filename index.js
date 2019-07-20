@@ -4,13 +4,33 @@ var stream = require("mithril/stream");
 /**
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
- * NOTE: Compile-time safety only. No run-time error will be thrown.
+ * NOTE: No run-time checks are performed
  */
 function readOnly(s) {
-    // TODO: How to add run-time check?
     return s.map(function (x) { return x; });
 }
 exports.readOnly = readOnly;
+/**
+ * (Experimental!)
+ * Creates a ReadonlyStream from the source stream.
+ * The source can be writeable or readonly.
+ * The returned stream performs run-time write checks.
+ * TODO: make `end` available.
+ */
+function readOnlyRT(s) {
+    var rs = s.map(function (x) { return x; });
+    // Provide run-time write checks
+    function f() {
+        if (arguments.length > 0) {
+            throw new Error('Cannot write to a ReadonlyStream');
+        }
+        return rs();
+    }
+    // rs.end is not copied by the assign..
+    // would need to handle it specially.
+    return Object.assign(f, rs);
+}
+exports.readOnlyRT = readOnlyRT;
 function lift(fn) {
     var streams = [];
     for (var _i = 1; _i < arguments.length; _i++) {
