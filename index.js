@@ -15,7 +15,6 @@ exports.readOnly = readOnly;
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
  * The returned stream performs run-time write checks.
- * TODO: make `end` available.
  */
 function readOnlyRT(s) {
     var rs = s.map(function (x) { return x; });
@@ -26,9 +25,11 @@ function readOnlyRT(s) {
         }
         return rs();
     }
-    // rs.end is not copied by the assign..
-    // would need to handle it specially.
-    return Object.assign(f, rs);
+    Object.assign(f, rs);
+    // rs.end is a getter, not copied by the assign.
+    // Need to handle it specially.
+    f.end = rs.end;
+    return f;
 }
 exports.readOnlyRT = readOnlyRT;
 function lift(fn) {

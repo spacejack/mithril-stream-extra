@@ -13,7 +13,7 @@ declare module 'mithril/stream' {
 		/** Apply. */
 		ap<U>(s: ReadonlyStream<(value: T) => U>): Stream<U>
 		/** A co-dependent stream that unregisters dependent streams when set to true. */
-		end: ReadonlyStream<boolean>
+		end: Stream<boolean>
 		/** When a stream is passed as the argument to JSON.stringify(), the value of the stream is serialized. */
 		toJSON(): string
 		/** Returns the value of the stream. */
@@ -50,7 +50,6 @@ export function readOnly<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
  * The returned stream performs run-time write checks.
- * TODO: make `end` available.
  */
 export function readOnlyRT<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
 	const rs = s.map(x => x)
@@ -61,9 +60,11 @@ export function readOnlyRT<T>(s: ReadonlyStream<T>): ReadonlyStream<T> {
 		}
 		return rs()
 	}
-	// rs.end is not copied by the assign..
-	// would need to handle it specially.
-	return Object.assign(f, rs)
+	Object.assign(f, rs)
+	// rs.end is a getter, not copied by the assign.
+	// Need to handle it specially.
+	f.end = rs.end
+	return f as any as ReadonlyStream<T>
 }
 
 /**
