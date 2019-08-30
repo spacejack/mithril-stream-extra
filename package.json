@@ -1,6 +1,6 @@
 {
   "name": "mithril-stream-extra",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Mithril Stream Extras",
   "main": "index.js",
   "scripts": {
@@ -10,14 +10,14 @@
     "clean": "rm -f *.js *.d.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "spacejack",
   "license": "ISC",
   "devDependencies": {
-    "@types/mithril": "^1.1.17",
-    "browserify": "^16.3.0",
-    "mithril": "^1.1.6",
+    "@types/mithril": "^2.0.0",
+    "browserify": "^16.5.0",
+    "mithril": "^2.0.4",
     "tsify": "^4.0.1",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3"
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.2"
   }
 }

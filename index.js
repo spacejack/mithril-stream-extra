@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var stream = require("mithril/stream");
+var Stream = require("mithril/stream");
 /**
  * Creates a ReadonlyStream from the source stream.
  * The source can be writeable or readonly.
@@ -32,29 +32,19 @@ function readOnlyRT(s) {
     return f;
 }
 exports.readOnlyRT = readOnlyRT;
-function lift(fn) {
-    var streams = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        streams[_i - 1] = arguments[_i];
-    }
-    return stream.merge(streams).map(function (values) { return fn.apply(undefined, values); });
-}
-exports.lift = lift;
+var sentinel = {};
 /**
  * Creates a dependent stream that only updates when the source stream value differs from the previous
  * @param s The source stream
  * @returns The resulting dependent stream
  */
 function dropRepeats(s) {
-    var ready = false;
-    var d = stream();
-    s.map(function (v) {
-        if (!ready || v !== d()) {
-            ready = true;
-            d(v);
-        }
+    var prev = sentinel;
+    return s.map(function (x) {
+        var cur = prev;
+        prev = x;
+        return cur === x ? Stream.SKIP : x;
     });
-    return d;
 }
 exports.dropRepeats = dropRepeats;
 /**
@@ -63,7 +53,7 @@ exports.dropRepeats = dropRepeats;
  */
 function dropInitial(s) {
     var isset = false;
-    var e = stream();
+    var e = Stream();
     s.map(function (x) { return (isset ? e(x) : isset = true, x); });
     return isset ? e : s.map(function (x) { return x; });
 }
@@ -73,21 +63,21 @@ exports.dropInitial = dropInitial;
  */
 function one(s) {
     return new Promise(function (resolve) {
-        var done = false;
-        var s1;
-        s1 = s.map(function (v) {
-            if (done) {
-                return;
+        var child = sentinel;
+        var dep = s.map(function (v) {
+            var memo = child;
+            child = undefined;
+            if (memo != null) {
+                resolve(v);
+                if (sentinel !== memo)
+                    memo.end(true);
             }
-            done = true;
-            if (s1 != null) {
-                s1.end(true);
-            }
-            resolve(v);
+            return Stream.SKIP;
         });
-        if (done) {
-            s1.end(true);
-        }
+        if (child == null)
+            dep.end(true);
+        else
+            child = dep;
     });
 }
 exports.one = one;

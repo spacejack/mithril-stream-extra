@@ -5,7 +5,7 @@ This library includes a few supplemental stream functions as well as a `Readonly
 Additional functions include:
 
 * `readOnly` for creating a dependent stream that cannot be written to
-* `lift` is a more user-friendly `combine` that unwraps the stream values
+* `readOnlyRT` for creating a dependent stream that cannot be written to - with run-time checks
 * `dropRepeats` drops emits for values that are the same as the previous
 * `dropInitial` omits initial values from the parent stream
 * `one` returns a Promise that resolves on stream's initial value
