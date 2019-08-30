@@ -1,6 +1,6 @@
 {
   "name": "mithril-stream-extra",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Mithril Stream Extras",
   "main": "index.js",
   "scripts": {

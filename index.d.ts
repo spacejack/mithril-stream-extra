@@ -57,7 +57,7 @@ export declare function readOnlyRT<T>(s: ReadonlyStream<T>): ReadonlyStream<T>;
  * @param s The source stream
  * @returns The resulting dependent stream
  */
-export declare function dropRepeats<T>(s: Stream<T>): Stream<T>;
+export declare function dropRepeats<T>(s: ReadonlyStream<T>): Stream<T>;
 /**
  * Creates a dependent stream that will not emit any existing value for the stream.
  * This will only fire on future updates.

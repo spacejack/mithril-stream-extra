@@ -81,7 +81,7 @@ const sentinel = {}
  * @param s The source stream
  * @returns The resulting dependent stream
  */
-export function dropRepeats<T>(s: Stream<T>) {
+export function dropRepeats<T>(s: ReadonlyStream<T>) {
 	let prev = sentinel
 	return s.map(x => {
 		const cur = prev
